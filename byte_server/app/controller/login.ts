@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 
 // 注册
-const register = async (ctx: any) => {
+const register = async (ctx: any) => { 
     const { username, password } = ctx.request.body;
     const user = await UserModel.find({});
     const userId = mongoose.Types.ObjectId(user.length + 1);

@@ -29,6 +29,10 @@ const UsersSchema = mongoose.Schema({
     status: {
         type: Number,  // 0登录， 1未登录
         default: 1
+    },
+    charList: {
+        type: Array,
+        default: []
     }
 
 })

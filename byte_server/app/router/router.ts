@@ -7,7 +7,7 @@ const {
     logout,
     register,
     getLoginStatus
-} = require('./controller/login.ts')
+} = require('../controller/login.ts')
 
 router.get("/", async (ctx: any) => {
     ctx.body = { msg: "Hello koa Interfaces" };

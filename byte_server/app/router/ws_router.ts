@@ -4,7 +4,7 @@ const {
     sendMessage,
     getChattingRecord,
     getChatList
-} = require('./controller/sendMessage.ts');
+} = require('../controller/sendMessage.ts');
 
 
 // message

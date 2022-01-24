@@ -55,7 +55,9 @@ const getChatList = async (ctx: any) => {
     })
 
 }
+
 export { }
+
 module.exports = {
     sendMessage,
     getChattingRecord,
