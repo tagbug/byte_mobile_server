@@ -1,31 +1,42 @@
 
+import { io } from "../app";
 const MessageModel = require('../model/MessageModel')
 
-const sendMessage = async (ctx: any) => {
-    const { userId, receiverId, message } = ctx.request.body;
-    console.log(ctx.request.body);
-    const messages = await MessageModel.find();
-    const messageId = messages.length + 1;
-    const newMessage = new MessageModel({
-        userId,
-        receiverId,
-        messageId,
-        message
+
+const sendMessage = (ctx: any) => {
+    io.on('connection', (socket: any) => {
+        console.log('websocket connected');
+        socket.on('disconnect', () => {
+            console.log('user disconnected');
+        });
+        socket.on('message', async (str: any) => {
+            const obj = JSON.parse(str);
+            const { userId, receiverId, message } = obj;
+
+            io.emit('message', 'hoho');
+            try {
+                const messages = await MessageModel.find();
+                const messageId = messages.length + 1;
+                const newMessage = new MessageModel({
+                    messageId,
+                    userId,
+                    receiverId,
+                    message
+                })
+                await MessageModel.create(newMessage);
+            } catch (err) {
+                console.log(err);
+            }
+        });
     })
-    try {
-        await MessageModel.create(newMessage);
-        ctx.body = { status: 0, msg: '发送成功' }
-    } catch (err) {
-        ctx.body = { status: 1, msg: '未知异常' };
-    }
+
+
 }
 
 const getChattingRecord = async (ctx: any) => {
     const { userId, receiverId } = ctx.request.query;
     try {
-        const record1 = await MessageModel.find({ userId, receiverId });
-        const record2 = await MessageModel.find({ receiverId: userId, userId: receiverId });
-        const record = [...record1, ...record2];
+        const record = await MessageModel.find({ $or: [{ userId, receiverId }, { userId: receiverId, receiverId: userId }] });
         ctx.body = record;
     } catch (err) {
         ctx.body = { status: 1, msg: '未知异常' };
@@ -42,8 +53,9 @@ const getChatList = async (ctx: any) => {
         ctx.body = { msg: '获取失败' };
     }
 }
-
+export { }
 module.exports = {
     sendMessage,
-
+    getChattingRecord,
+    getChatList
 }

@@ -1,21 +1,22 @@
 const mongoose = require('mongoose');
+const { database } = require('../../config/config.ts')
 
 const MessageSchema = mongoose.Schema({
+    messageId: {
+        type: Number,
+        required: true,
+    },
     userId: {
         type: Number,
-        require: true,
+        required: true
     },
     receiverId: {
         type: Number,
-        require: true,
-    },
-    messageId: {
-        type: Number,
-        require: true,
+        required: true,
     },
     message: {
         type: String,
-        require: true,
+        required: true,
     },
     time: {
         type: String,
