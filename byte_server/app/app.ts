@@ -1,9 +1,9 @@
 import { Context } from "koa";
 
 const Koa = require('koa');
-const Router = require('koa-router');
 const app = new Koa();
-const router = new Router();
+const router = require('./router');
+const ws_router = require('./ws_router');
 
 app.use(async (ctx: Context, next: () => unknown) => {
     ctx.body = 'Hello World';
@@ -24,14 +24,16 @@ ws_app.ws.use((ctx: Context, next: Function) => {
     ctx.websocket.send('连接成功');
     return next(ctx);
 })
-ws_app.ws.use(router.all('/', (ctx: Context) => {
+ws_app.ws.use((ctx: Context, next: Function) => {
     ctx.websocket.send('Hello World');
     ctx.websocket.on('message', function (message: any) {
         console.log(message);
-        ctx.websocket.end('666');
     });
-}));
-// websocket.ws.use(router.routes()).use(router.allowedMethods());
+    return next(ctx);
+});
+
+app.use(router.routes()).use(router.allowedMethods());
+ws_app.ws.use(ws_router.routes()).use(ws_router.allowedMethods());
 
 const PORT = process.env.PORT || 3000;
 ws_app.listen(PORT, () => {
