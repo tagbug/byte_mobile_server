@@ -11,7 +11,7 @@
       "suppressImplicitAnyIndexErrors": true,
     },
     "include": [
-      "app/**/*",
+      "../app/**/*",
       "config/**/*",
     ]
   }
