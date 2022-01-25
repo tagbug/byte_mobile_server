@@ -3,23 +3,29 @@ const mongoose = require('mongoose');
 
 
 // 注册
-const register = async (ctx: any) => { 
+const register = async (ctx: any) => {
     const { username, password } = ctx.request.body;
-    const user = await UserModel.find({});
-    const userId = mongoose.Types.ObjectId(user.length + 1);
-    if (user.length) ctx.body = { msg: '该用户名已存在' };
-    const newUser = new UserModel({
-        userId,
-        username,
-        password,
-    })
+    const user = await UserModel.findOne({ username }); 
 
-    try {
-        await UserModel.create(newUser);
-        ctx.body = { status: 0, msg: '注册成功' }
-    } catch (err) {
-        ctx.body = { status: 1, msg: '注册失败' }
+    if (user) ctx.body = { msg: '该用户名已存在' };
+    else {
+        const users = await UserModel.find({});
+        const userId = users.length + 1;
+        const newUser = new UserModel({
+            userId,
+            user,
+            username,
+            password,
+        })
+
+        try {
+            await UserModel.create(newUser);
+            ctx.body = { status: 0, msg: '注册成功' }
+        } catch (err) {
+            ctx.body = { status: 1, msg: '注册失败' }
+        }
     }
+
 }
 
 // 登录
