@@ -1,11 +1,11 @@
-const UserModel = require('../model/UserModel.ts');
+const UserModel = require('../model/UserModel.js');
 const mongoose = require('mongoose');
 
 
 // 注册
-const register = async (ctx: any) => {
+const register = async (ctx) => {
     const { username, password } = ctx.request.body;
-    const user = await UserModel.findOne({ username }); 
+    const user = await UserModel.findOne({ username });
 
     if (user) ctx.body = { msg: '该用户名已存在' };
     else {
@@ -29,7 +29,7 @@ const register = async (ctx: any) => {
 }
 
 // 登录
-const login = async (ctx: any) => {
+const login = async (ctx) => {
     const body = ctx.request.body;
     const { username, password } = body;
 
@@ -48,7 +48,7 @@ const login = async (ctx: any) => {
 }
 
 // 退出登录
-const logout = async (ctx: any) => {
+const logout = async (ctx) => {
     const { username } = ctx.request.body;
     try {
         const data = await UserModel.updateOne({ username }, { status: 1 });
@@ -65,7 +65,7 @@ const logout = async (ctx: any) => {
 }
 
 // 查看登录状态
-const getLoginStatus = async (ctx: any) => {
+const getLoginStatus = async (ctx) => {
     const { username } = ctx.query;
     const result = await UserModel.findOne({ username });
     if (result) {
@@ -75,7 +75,7 @@ const getLoginStatus = async (ctx: any) => {
     }
 }
 
-export { };
+// export { };
 
 
 module.exports = {

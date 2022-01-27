@@ -2,13 +2,9 @@
 const MessageModel = require('../model/MessageModel');
 const UserModel = require('../model/UserModel')
 
-interface User {
-    userId: Number
-    receiverId: Number,
-}
 
-const sendMessage = (ctx: any) => {
-    ctx.websocket.on('message', async (info: any) => {
+const sendMessage = (ctx) => {
+    ctx.websocket.on('message', async (info) => {
         const obj = JSON.parse(info);
         const { userId, receiverId, message } = obj;
 
@@ -20,18 +16,17 @@ const sendMessage = (ctx: any) => {
             const receiver_charList = receiver.charList;
 
             let check = 0, receiver_check = 0;  // 假设不在 
-            charList.forEach((obj: User) => {
+            charList && charList.forEach((obj) => {
                 if (obj && obj.userId === receiverId) check = 1;
             });
-            receiver_charList.forEach((obj: User) => {
+            receiver_charList && receiver_charList.forEach((obj) => {
                 if (obj && obj.userId === userId) receiver_check = 1;
-            }); 
+            });
 
-            check === 0 && charList.push(receiver);
-            receiver_check === 0 && receiver_charList.push(user);
-
-            await UserModel.updateOne({ userId }, { charList });
-            await UserModel.updateOne({ userId: receiverId }, { charList: receiver_charList })
+            const newCharList = [...charList, receiver];
+            const newReceiverList = [...receiver_charList, user];
+            if (!check) await UserModel.updateOne({ userId }, { charList: newCharList });
+            if (!receiver_check) await UserModel.updateOne({ userId: receiverId }, { charList: newReceiverList })
 
             const messageId = messages.length + 1;
             const newMessage = new MessageModel({
@@ -49,8 +44,8 @@ const sendMessage = (ctx: any) => {
     });
 }
 
-const getChattingRecord = async (ctx: any) => {
-    ctx.websocket.on('message', async (info: any) => {
+const getChattingRecord = async (ctx) => {
+    ctx.websocket.on('message', async (info) => {
         const obj = JSON.parse(info);
         const { userId, receiverId } = obj;
         try {
@@ -63,23 +58,24 @@ const getChattingRecord = async (ctx: any) => {
     })
 }
 
-const getChatList = async (ctx: any) => {
-    ctx.websocket.on('message', async (info: any) => {
-        const obj = JSON.parse(info)
+const getChatList = async (ctx) => {
+    ctx.websocket.on('message', async (info) => {
+
+        const obj = JSON.parse(info);
         const { userId } = obj;
-        console.log(obj);
 
         try {
-            const charList = await MessageModel.find({ $or: [{ userId }, { receiverId: userId }] });
+            const user = await UserModel.findOne(userId);
+            const charList = user.charList;
+
             ctx.websocket.send(JSON.stringify(charList));
         } catch (err) {
             ctx.websocket.send("{ msg: '获取失败' }");
         }
     })
-
 }
 
-export { }
+// export { }
 
 module.exports = {
     sendMessage,

@@ -7,9 +7,9 @@ const {
     logout,
     register,
     getLoginStatus
-} = require('../controller/login.ts')
+} = require('../controller/login.js')
 
-router.get("/", async (ctx: any) => {
+router.get("/", async (ctx) => {
     ctx.body = { msg: "Hello koa Interfaces" };
 })
 
@@ -24,6 +24,6 @@ router.get("/getLoginStatus", getLoginStatus);
 // router.all('/getChattingRecord', getChattingRecord);
 // router.all('/getChatList', getChatList);
 
-export { };
+// export { };
 
 module.exports = router;

@@ -1,18 +1,17 @@
 {
-    "compilerOptions": {
-      "module": "commonjs", // 编译生成的模块系统代码
-      "target": "esnext", // 指定ecmascript的目标版本
-      "noImplicitAny": true, // 禁止隐式any类型
-      "outDir": "./dist",
-      "sourceMap": false,
-      "allowJs": false, // 是否允许出现js
-      "newLine": "LF",
-      "esModuleInterop": true, // important!
-      "suppressImplicitAnyIndexErrors": true,
-    },
-    "include": [
-      "../app/**/*",
-      "config/**/*",
-    ]
-  }
-  
+  "compilerOptions": {
+    "module": "commonjs", // 编译生成的模块系统代码
+    "target": "esnext", // 指定ecmascript的目标版本
+    "noImplicitAny": true, // 禁止隐式any类型
+    "outDir": "./dist",
+    "sourceMap": false,
+    "allowJs": true, // 是否允许出现js
+    "newLine": "LF",
+    "esModuleInterop": true, // important!
+    "suppressImplicitAnyIndexErrors": true,
+  },
+  "include": [
+    "../app/**/*",
+    "config/**/*",
+  ]
+}
