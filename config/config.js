@@ -3,9 +3,9 @@ const config = {
   database: 'byte',
   username: '',
   password: '',
-  host: '101.33.245.208',
+  host: '127.0.0.1',
   port: 27017,
-  dbUrl: 'mongodb://root:123456@101.33.245.208:27017/byte?authSource=admin'
+  dbUrl: 'mongodb://127.0.0.1:27017/byte'
 };
 
 module.exports = config;
